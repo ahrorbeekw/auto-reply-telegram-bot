@@ -20,8 +20,8 @@ bir marta** javob qaytaradi.
 ### 1. Repozitoriyani klonlash
 
 ``` bash
-git clone https://github.com/username/autoreply-userbot.git
-cd autoreply-userbot
+git clone https://github.com/ahrorbeekw/auto-reply-telegram-bot.git
+cd auto-reply-telegram-bot
 ```
 
 ### 2. Virtual muhit yaratish (ixtiyoriy)
