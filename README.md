@@ -1,53 +1,108 @@
-🤖 Telegram Auto-Reply Userbot
+# 🤖 Avto-Reply Userbot
 
-Ushbu Userbot Telethon kutubxonasi yordamida yozilgan bo‘lib, xabar kelganda avtomatik tarzda faqat birinchi marta javob beradi.
+Bu userbot **[Telethon](https://docs.telethon.dev/)** kutubxonasi
+yordamida yozilgan bo'lib, kiruvchi xabarlarga avtomatik tarzda **faqat
+bir marta** javob qaytaradi.
 
-✨ Xususiyatlari
+------------------------------------------------------------------------
 
-Har bir foydalanuvchiga faqat 1 marta avtomatik javob qaytaradi.
+## 📌 Xususiyatlar
 
-Xabar yuborgan odamga quyidagi javob qaytariladi:
+-   Har bir foydalanuvchiga faqat **1 marta javob beradi**.\
+-   Javob matni: `👋 Salom! Men hozir bandman, keyin yozaman.`\
+-   Konsolda foydalanuvchining ismi va unga javob berilganligi haqida
+    yozib boradi.
 
-👋 Salom! Men hozir bandman, keyin yozaman.
+------------------------------------------------------------------------
 
+## ⚙️ O'rnatish
 
-Konsolda foydalanuvchiga javob berilgani haqida ma’lumot chiqariladi.
+### 1. Repozitoriyani klonlash
 
-O‘z akkauntingiz orqali ishlaydi (bot emas, userbot).
+``` bash
+git clone https://github.com/username/autoreply-userbot.git
+cd autoreply-userbot
+```
 
-⚙️ O‘rnatish
+### 2. Virtual muhit yaratish (ixtiyoriy)
 
-Loyihani yuklab oling yoki kodni main.py fayliga saqlang.
+``` bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+```
 
-Python kutubxonalarini o‘rnating:
+### 3. Kerakli kutubxonalarni o'rnatish
 
+``` bash
 pip install telethon
+```
 
+------------------------------------------------------------------------
 
-api_id va api_hash ni my.telegram.org
- orqali oling.
+## 🔑 API ID va API Hash olish
 
-api_id = 1234567 joyiga o‘z API IDingizni yozing
+1.  [my.telegram.org](https://my.telegram.org) saytiga kiring.\
+2.  `API development tools` bo'limidan yangi **app** yarating.\
+3.  `api_id` va `api_hash` ni oling.
 
-api_hash = "YOUR_API_HASH" joyiga o‘z API HASHingizni yozing
+------------------------------------------------------------------------
 
-Skriptni ishga tushiring:
+## 🚀 Ishga tushirish
 
+`main.py` faylingizni ishga tushiring:
+
+``` bash
 python main.py
+```
 
+Konsolda quyidagiga o'xshash yozuv chiqadi:
 
-Birinchi marta ishga tushganda telefon raqamingizni va SMS orqali kelgan kodni kiritishingiz kerak bo‘ladi. Shundan keyin my_account.session fayl yaratiladi va qayta kiritish talab qilinmaydi.
+    🤖 Avto-reply userbot ishga tushdi...
 
-📂 Fayl tarkibi
+------------------------------------------------------------------------
 
-main.py — asosiy userbot kodi
+## 📂 Kod namunasi
 
-my_account.session — avtorizatsiya fayli (avtomatik yaratiladi)
+``` python
+from telethon import TelegramClient, events
+import asyncio
 
-📌 Izoh
+api_id = 1234567
+api_hash = "YOUR_API_HASH"
+session = "my_account"
 
-Ushbu userbot faqat bitta javob beradi, ya’ni har bir foydalanuvchi uchun faqat birinchi marta ishlaydi.
+client = TelegramClient(session, api_id, api_hash)
 
-Xohlasa, answered_users o‘rniga ma’lumotni fayl yoki baza orqali saqlash mumkin.
+answered_users = set()
 
-✅ Endi skriptni ishga tushirsangiz, siz band bo‘lganda ham odamlar avtomatik javob oladi.
+@client.on(events.NewMessage(incoming=True))
+async def handler(event):
+  sender = await event.get_sender()
+  user_id = sender.id
+
+  if user_id == (await client.get_me()).id:
+    return
+
+  if user_id not in answered_users:
+    await event.reply("👋 Salom! Men hozir bandman, keyin yozaman.")
+    answered_users.add(user_id)
+    print(f"[AUTO-REPLY] {sender.first_name} ga 1 marta javob berildi.")
+
+print("🤖 Avto-reply userbot ishga tushdi...")
+async def main():
+  await client.start()
+  await client.run_until_disconnected()
+
+asyncio.run(main())
+```
+
+------------------------------------------------------------------------
+
+## ⚠️ Eslatma
+
+-   Ushbu kod **faqat userbot sifatida ishlaydi** (Telegram hisobingiz
+    bilan ishlaydi).\
+-   **Bot token** emas, balki **API ID va API Hash** talab qiladi.\
+-   Agar Telegram qoidalarini buzsangiz, akkauntingiz cheklanishi
+    mumkin.
